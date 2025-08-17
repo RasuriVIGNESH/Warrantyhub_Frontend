@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { Mail, Lock, Eye, EyeOff, User } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import { GoogleOAuthButton } from '../../components/auth/GoogleOAuthButton';
 
 export function Register() {
   const [showPassword, setShowPassword] = useState(false);
@@ -81,6 +82,23 @@ export function Register() {
               Sign in
             </Link>
           </p>
+        </div>
+
+        {/* OAuth2 Google Button */}
+        <div>
+          <GoogleOAuthButton disabled={isSubmitting} />
+        </div>
+
+        {/* Divider */}
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-300 dark:border-gray-600" />
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 bg-gray-50 dark:bg-gray-900 text-gray-500 dark:text-gray-400">
+              Or register with email
+            </span>
+          </div>
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>

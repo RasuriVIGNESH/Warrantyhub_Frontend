@@ -1,10 +1,18 @@
 /**
- * API Configuration
+ * API Configuration - FIXED: Use environment variables for flexibility
  */
 export const API_CONFIG = {
-  BASE_URL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api',
+  BASE_URL: import.meta.env.VITE_API_URL || 'http://localhost:8080/api',
   TIMEOUT: 10000, // 10 seconds
   VERSION: 'v1',
+};
+
+/**
+ * Backend Configuration - NEW: Support for OAuth2 endpoints
+ */
+export const BACKEND_CONFIG = {
+  BASE_URL: import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080',
+  GOOGLE_AUTH_URL: (import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080') + '/oauth2/authorization/google',
 };
 
 /**
@@ -95,6 +103,8 @@ export const ERROR_MESSAGES = {
   FILE_SIZE: `File size must be less than ${FILE_CONFIG.MAX_FILE_SIZE / 1024 / 1024}MB`,
   FILE_TYPE: `Only ${FILE_CONFIG.ALLOWED_TYPES_TEXT} files are allowed`,
   MAX_FILES: `Maximum ${FILE_CONFIG.MAX_FILES} files allowed`,
+  AUTH_FAILED: 'Authentication failed. Please try again.',
+  TOKEN_EXPIRED: 'Your session has expired. Please sign in again.',
 };
 
 /**
@@ -106,6 +116,7 @@ export const STORAGE_KEYS = {
   REFRESH_TOKEN: AUTH_CONFIG.REFRESH_TOKEN_KEY,
   TOKEN_EXPIRY: AUTH_CONFIG.TOKEN_EXPIRY_KEY,
   USER_PREFERENCES: 'warranty_tracker_preferences',
+  OAUTH2_REDIRECT_PATH: 'oauth2_redirect_path',
 };
 
 /**
@@ -124,4 +135,14 @@ export const CHART_COLORS = {
   expiringSoon: '#F59E0B', // yellow
   expired: '#EF4444', // red
   unknown: '#6B7280', // gray
-}; 
+};
+
+/**
+ * OAuth2 Configuration
+ */
+export const OAUTH2_CONFIG = {
+  REDIRECT_PATH_KEY: STORAGE_KEYS.OAUTH2_REDIRECT_PATH,
+  SUCCESS_REDIRECT: '/dashboard',
+  ERROR_REDIRECT: '/login',
+};
+

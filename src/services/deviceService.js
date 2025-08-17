@@ -1,19 +1,18 @@
 import api from './api';
 
 const DEVICE_ENDPOINTS = {
-  BASE: '/devices',
-  CATEGORIES: '/devices/categories',
-  SEARCH: '/devices/search',
-  STATS: '/devices/stats',
+  BASE: '/api/devices', 
+  CATEGORIES: '/api/devices/categories', 
+  SEARCH: '/api/devices/search',  
+  STATS: '/api/devices/stats',         
 };
-
 class DeviceService {
 
   // Document management methods
     async uploadDocument(deviceId, file) {
       const formData = new FormData();
       formData.append("file", file);
-      const response = await api.post(`/devices/${deviceId}/documents`, formData, {
+      const response = await api.post(`/api/devices/${deviceId}/documents`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -22,12 +21,12 @@ class DeviceService {
     }
 
     async getDocuments(deviceId) {
-      const response = await api.get(`/devices/${deviceId}/documents`);
+      const response = await api.get(`/api/devices/${deviceId}/documents`);
       return response.data;
     }
 
     async downloadDocument(deviceId, documentId) {
-      const response = await api.get(`/devices/${deviceId}/documents/${documentId}`, {
+      const response = await api.get(`/api/devices/${deviceId}/documents/${documentId}`, {
         responseType: 'blob',
       });
       
@@ -56,7 +55,7 @@ class DeviceService {
     }
 
     async deleteDocument(deviceId, documentId) {
-      const response = await api.delete(`/devices/${deviceId}/documents/${documentId}`);
+      const response = await api.delete(`/api/devices/${deviceId}/documents/${documentId}`);
       return response.data;
     }
   async getAllDevices(params = {}) {
@@ -108,22 +107,22 @@ class DeviceService {
 
   // Maintenance management methods
     async getMaintenanceRecords(deviceId) {
-      const response = await api.get(`/devices/${deviceId}/maintenance`);
+      const response = await api.get(`/api/devices/${deviceId}/maintenance`);
       return response.data;
     }
 
     async addMaintenanceRecord(deviceId, recordData) {
-      const response = await api.post(`/devices/${deviceId}/maintenance`, recordData);
+      const response = await api.post(`/api/devices/${deviceId}/maintenance`, recordData);
       return response.data;
     }
 
     async updateMaintenanceRecord(deviceId, recordId, recordData) {
-      const response = await api.put(`/devices/${deviceId}/maintenance/${recordId}`, recordData);
+      const response = await api.put(`/api/devices/${deviceId}/maintenance/${recordId}`, recordData);
       return response.data;
     }
 
     async deleteMaintenanceRecord(deviceId, recordId) {
-      const response = await api.delete(`/devices/${deviceId}/maintenance/${recordId}`);
+      const response = await api.delete(`/api/devices/${deviceId}/maintenance/${recordId}`);
       return response.data;
     }
 }

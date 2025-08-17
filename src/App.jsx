@@ -4,9 +4,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { NotificationProvider } from './contexts/NotificationContext';
-import { ErrorBoundary } from './components/ErrorBoundary';
 import { Layout } from './components/layout/Layout';
 import { LoadingScreen } from './components/ui/LoadingScreen';
+import { ErrorBoundary } from 'react-error-boundary';
+import { ErrorFallback } from './components/ErrorFallback';
 
 // Lazy load pages
 const Dashboard = lazy(() => import('./pages/Dashboard').then(m => ({ default: m.Dashboard })));
@@ -20,6 +21,7 @@ const ResetPassword = lazy(() => import('./pages/auth/ResetPassword').then(m => 
 const Profile = lazy(() => import('./pages/Profile').then(m => ({ default: m.Profile })));
 const NotFound = lazy(() => import('./pages/NotFound').then(m => ({ default: m.NotFound })));
 const UpdateProfile = lazy(() => import('./pages/UpdateProfile').then(m => ({ default: m.UpdateProfile })));
+const OAuth2RedirectHandler = lazy(() => import('./components/auth/OAuth2RedirectHandler').then(m => ({ default: m.OAuth2RedirectHandler })));
 
 // Create React Query client
 const queryClient = new QueryClient({
@@ -38,30 +40,22 @@ queryClient.clear();
 
 function ProtectedRoute({ children }) {
   const { isAuthenticated, isLoading } = useAuth();
-
+  
   if (isLoading) {
     return <LoadingScreen />;
   }
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-
-  return children;
+  
+  return isAuthenticated ? children : <Navigate to="/login" replace />;
 }
 
 function PublicRoute({ children }) {
   const { isAuthenticated, isLoading } = useAuth();
-
+  
   if (isLoading) {
     return <LoadingScreen />;
   }
-
-  if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
-  }
-
-  return children;
+  
+  return isAuthenticated ? <Navigate to="/dashboard" replace /> : children;
 }
 
 function AppRoutes() {
@@ -96,6 +90,13 @@ function AppRoutes() {
               <ResetPassword />
             </Suspense>
           </PublicRoute>
+        } />
+
+        {/* OAuth2 Redirect Route - This handles the redirect from Google */}
+        <Route path="/oauth2/redirect" element={
+          <Suspense fallback={<LoadingScreen />}>
+            <OAuth2RedirectHandler />
+          </Suspense>
         } />
 
         {/* Protected Routes */}
@@ -150,38 +151,19 @@ function AppRoutes() {
 
 export default function App() {
   return (
-    <ErrorBoundary>
+    <ErrorBoundary
+      FallbackComponent={ErrorFallback}
+      onReset={() => window.location.reload()}
+    >
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <NotificationProvider>
-          <AppRoutes />
-          <Toaster
-            position="top-right"
-            toastOptions={{
-              duration: 5000,
-              style: {
-                background: '#363636',
-                color: '#fff',
-              },
-              success: {
-                duration: 3000,
-                iconTheme: {
-                  primary: '#10B981',
-                  secondary: '#fff',
-                },
-              },
-              error: {
-                duration: 4000,
-                iconTheme: {
-                  primary: '#EF4444',
-                  secondary: '#fff',
-                },
-              },
-            }}
-          />
+            <AppRoutes />
+            <Toaster position="top-right" />
           </NotificationProvider>
         </AuthProvider>
       </QueryClientProvider>
     </ErrorBoundary>
   );
 }
+
