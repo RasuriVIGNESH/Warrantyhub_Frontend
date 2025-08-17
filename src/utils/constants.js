@@ -1,14 +1,15 @@
 /**
- * API Configuration - FIXED: Use environment variables for flexibility
+ * API Configuration - FIXED: Correct environment variables and URL structure
  */
 export const API_CONFIG = {
-  BASE_URL: import.meta.env.VITE_API_URL || 'http://localhost:8080/api',
+  // FIXED: Don't add /api here since we add it in individual endpoints
+  BASE_URL: import.meta.env.VITE_API_URL || 'http://localhost:8080',
   TIMEOUT: 10000, // 10 seconds
   VERSION: 'v1',
 };
 
 /**
- * Backend Configuration - NEW: Support for OAuth2 endpoints
+ * Backend Configuration - FIXED: Use correct VITE_ variables
  */
 export const BACKEND_CONFIG = {
   BASE_URL: import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080',
@@ -145,4 +146,3 @@ export const OAUTH2_CONFIG = {
   SUCCESS_REDIRECT: '/dashboard',
   ERROR_REDIRECT: '/login',
 };
-

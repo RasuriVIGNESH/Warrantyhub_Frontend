@@ -1,9 +1,9 @@
 import api from './api';
 
 const FILE_ENDPOINTS = {
-  UPLOAD: '/files/upload',
-  DOWNLOAD: '/files/download',
-  DELETE: '/files/delete',
+  UPLOAD: '/api/files/upload',
+  DOWNLOAD: '/api/files/download',
+  DELETE: '/api/files/delete',
 };
 
 class FileService {
