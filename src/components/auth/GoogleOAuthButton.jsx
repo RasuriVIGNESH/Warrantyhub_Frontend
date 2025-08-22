@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BACKEND_CONFIG, OAUTH2_CONFIG } from "../../utils/constants";
+import constants from "../../utils/constants";
 
 export function GoogleOAuthButton({ className = "", disabled = false }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -16,17 +16,17 @@ export function GoogleOAuthButton({ className = "", disabled = false }) {
       const isAuthPage = authPaths.some(path => currentLocation.startsWith(path));
       
       if (!isAuthPage) {
-        sessionStorage.setItem(OAUTH2_CONFIG.REDIRECT_PATH_KEY, currentLocation);
+        sessionStorage.setItem(constants.OAUTH2_CONFIG.REDIRECT_PATH_KEY, currentLocation);
       } else {
         // Default to dashboard for auth pages
-        sessionStorage.setItem(OAUTH2_CONFIG.REDIRECT_PATH_KEY, OAUTH2_CONFIG.SUCCESS_REDIRECT);
+        sessionStorage.setItem(constants.OAUTH2_CONFIG.REDIRECT_PATH_KEY, constants.OAUTH2_CONFIG.SUCCESS_REDIRECT);
       }
       
       console.log('Initiating Google OAuth2 login...');
-      console.log('Redirect URL:', BACKEND_CONFIG.GOOGLE_AUTH_URL);
+      console.log('Redirect URL:', constants.OAUTH2_CONFIG.GOOGLE.AUTHORIZATION_URL);
       
       // Redirect to Google OAuth2 endpoint
-      window.location.href = BACKEND_CONFIG.GOOGLE_AUTH_URL;
+      window.location.href = constants.OAUTH2_CONFIG.GOOGLE.AUTHORIZATION_URL;
     } catch (error) {
       console.error('Error initiating Google OAuth2:', error);
       setIsLoading(false);

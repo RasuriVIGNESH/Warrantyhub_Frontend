@@ -93,12 +93,11 @@ function AppRoutes() {
         } />
 
         {/* OAuth2 Redirect Route - This handles the redirect from Google */}
-        <Route path="/oauth2/redirect" element={
+        <Route path="/oauth2/callback" element={
           <Suspense fallback={<LoadingScreen />}>
             <OAuth2RedirectHandler />
           </Suspense>
         } />
-
         {/* Protected Routes */}
         <Route element={
           <ProtectedRoute>

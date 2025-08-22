@@ -10,7 +10,7 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   // Clear authentication state
   const clearAuthState = useCallback(() => {
     localStorage.removeItem(AUTH_CONFIG.TOKEN_KEY);
@@ -130,6 +130,27 @@ export function AuthProvider({ children }) {
     }
   }, [loadUserFromToken, clearAuthState]);
 
+  // Register a new user
+  const registerUser = useCallback(async (userData) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      // Call the register method from your AuthService
+      const responseData = await AuthService.register(userData);
+
+      // Handle successful registration response
+      // e.g., redirect to login or log in the user immediately
+      
+      return responseData;
+    } catch (err) {
+      setError(err.message || 'Registration failed');
+      throw err; // Re-throw the error to be handled by the form component
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   // Refresh user profile
   const refreshUser = useCallback(async () => {
     return loadUserFromToken();
@@ -161,6 +182,7 @@ export function AuthProvider({ children }) {
     refreshUser,
     isAuthenticated: !!user && !error,
     clearError: () => setError(null),
+    registerUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
@@ -178,4 +200,3 @@ export function useAuth() {
   }
   return context;
 }
-

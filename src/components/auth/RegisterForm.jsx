@@ -123,9 +123,10 @@ export function RegisterForm() {
         type="submit"
         className="w-full"
         isLoading={isSubmitting}
+        onClick={handleSubmit(onSubmit)}
       >
         Create Account
       </Button>
     </form>
   );
-} 
+}

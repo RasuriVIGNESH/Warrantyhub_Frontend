@@ -123,11 +123,14 @@ export function useDevices() {
 
   // Load devices on mount
   useEffect(() => {
-    fetchDevices();
-  }, [fetchDevices]);
+    
+    if (isAuthenticated) {
+      fetchDevices();
+    }
+  }, [isAuthenticated, fetchDevices]);
 
   return {
-    devices,
+    devices,  
     loading,
     error,
     fetchDevices,

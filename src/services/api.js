@@ -1,12 +1,13 @@
 import axios from 'axios';
-import { AUTH_CONFIG, API_CONFIG, ERROR_MESSAGES } from '../utils/constants';
+import constants from '../utils/constants';
+const { AUTH_CONFIG } = constants; 
 
 // Use configurable API URL from constants
-const API_URL = API_CONFIG.BASE_URL;
+const API_URL = constants.API_CONFIG.BASE_URL;
 
 const api = axios.create({
   baseURL: API_URL,
-  timeout: API_CONFIG.TIMEOUT,
+  timeout: constants.API_CONFIG.TIMEOUT,
 });
 
 // Add request interceptor to attach token
@@ -65,7 +66,7 @@ api.interceptors.response.use(
     console.log('Had Authorization header:', !!authHeader);
     console.log('Auth header preview:', authHeader ? authHeader.substring(0, 30) + '...' : 'none');
     console.log('==========================');
-
+    
     // Handle different error scenarios
     if (error.response?.status === 401) {
       console.log('=== 401 UNAUTHORIZED HANDLING ===');
@@ -75,7 +76,7 @@ api.interceptors.response.use(
       const isAuthRequest = error.config?.url?.includes('/auth/');
       console.log('Was auth request:', isAuthRequest);
       
-      localStorage.removeItem(AUTH_CONFIG.TOKEN_KEY);
+      localStorage.removeItem(constants.AUTH_CONFIG.TOKEN_KEY);
       
       const currentPath = window.location.pathname;
       console.log('Current path:', currentPath);
@@ -104,15 +105,15 @@ api.interceptors.response.use(
 
     // Enhance error object with user-friendly messages
     if (error.response?.status === 401) {
-      error.userMessage = ERROR_MESSAGES.UNAUTHORIZED;
+      error.userMessage = constants.ERROR_MESSAGES.UNAUTHORIZED;
     } else if (error.response?.status === 404) {
-      error.userMessage = ERROR_MESSAGES.NOT_FOUND;
+      error.userMessage = constants.ERROR_MESSAGES.NOT_FOUND;
     } else if (error.response?.status >= 500) {
       error.userMessage = 'Server error. Please try again later.';
     } else if (!error.response) {
-      error.userMessage = ERROR_MESSAGES.NETWORK;
+      error.userMessage = constants.ERROR_MESSAGES.NETWORK;
     } else {
-      error.userMessage = error.response?.data?.message || ERROR_MESSAGES.GENERIC;
+      error.userMessage = error.response?.data?.message || constants.ERROR_MESSAGES.GENERIC; 
     }
 
     return Promise.reject(error);
